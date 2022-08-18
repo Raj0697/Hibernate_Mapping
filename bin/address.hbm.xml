@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+<class name="example.Address" table="Address_details">
+<id name="A_id">
+<generator class="assigned">
+<param name="property">emp</param>
+</generator>
+</id>
+<property name="street"></property>
+<property name="city"></property>
+
+<one-to-one name = "emp"></one-to-one>
+
+</class>
+</hibernate-mapping>
