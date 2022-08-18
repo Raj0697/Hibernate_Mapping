@@ -1,113 +1,76 @@
-package example;
+package flipkart;
 
 import java.util.Iterator;
-import java.util.List;
-import java.util.Scanner;
-
+ 
 import org.hibernate.Query;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.mapping.List;
+import org.hibernate.Session;
 
-public class storedata
+
+public class storedata 
 {
 	public static void main(String args[])
 	{
-		int ch = 0;
 		try
 		{
 			
-			Scanner sc = new Scanner(System.in);
 			Configuration cfg = new Configuration();
-			cfg.configure("hibernate.cfg.xml");
+			cfg.configure("item.cfg.xml");
 			SessionFactory fact = cfg.buildSessionFactory();
-			Session session = fact.openSession();
-			int choice=0;
-			int id,A_id;
-			String name;
-			String street,city;
+			Session ses = fact.openSession();
+			Transaction t = ses.beginTransaction();
 			
-			do
+			//cart objects
+			cart ct = new cart();
+			ct.setid(101);
+			ct.setname("raj");
+			ct.setproducts("milk");
+			ct.setotalcost(3000);
+			
+			//items objects
+			Items it = new Items();
+			it.setI_id(201);
+			it.setname("ammy");
+			it.setcost(400);
+			
+			//using carts objects
+			ct.setitem(it);
+			
+			//using items objects
+			it.setcarts(ct);
+			//persisting the object
+			ses.persist(ct);
+			ses.persist(it);
+			
+			t.commit();
+			System.out.println("successfully saved");
+			String s = "from cart";
+			Query q = ses.createQuery(s);
+			List l = (List) q.list();
+			for(Iterator i=((java.util.List) l).iterator(); i.hasNext();)
 			{
-				System.out.println("============1.INSERT\t==== 2.DISPLAY\t======= 3.EXIT===============");
-				System.out.println("Enter the choice : ");
-				ch=sc.nextInt();
+				cart c2 = (cart)i.next();
+				System.out.println(c2.getid());
+				System.out.println(c2.getname());
+				System.out.println(c2.getproducts());
+				System.out.println(c2.gettotalcost());
 				
-				switch(ch)
-				{
-					case 1: 	Session sess = fact.openSession();
-								Transaction t = sess.beginTransaction();
-					
-								System.out.println("\n==========HIBERNATE ONE-TO-ONE MAPPING==============\n\n");
-								System.out.println("===========EMPLOYEE DETAILS================\n");
-								System.out.print("Enter the id : ");
-								id=sc.nextInt();
-								System.out.print("\nEnter the name : ");
-								name=sc.next();
-								
-								Employee e1 = new Employee();
-								e1.setid(id);
-								e1.setname(name);
-							
-								
-								System.out.println("\n===========ADDRESS DETAILS=============\n");
-								System.out.print("Enter the id : ");
-								A_id=sc.nextInt();
-								
-								System.out.print("\nEnter the street : ");
-								street=sc.next();
-								
-								System.out.println("\nEnter the city : ");
-								city=sc.next();
-								
-								Address address1 = new Address();
-								address1.setA_id(A_id);
-								address1.setstreet(street);
-								address1.setcity(city);
-								
-								e1.setAddr(address1);
-								address1.setemp(e1);
-								
-								sess.persist(e1);
-								sess.persist(address1);
-								t.commit();
-								sess.close();
-								System.out.println("success");
-								break;
-								
-				case 2:			String s = "from Employee";
-								Query q = session.createQuery(s);
-								List l = q.list();
-								
-								for(Iterator i=l.iterator(); i.hasNext();)
-								{
-									Employee e = (Employee)i.next();
-									System.out.println(e.getid());
-									System.out.println(e.getname());
-									
-									Address address = e.getAddr();
-									System.out.println(address.getA_id());
-									System.out.println(address.getstreet());
-									System.out.println(address.getcity());
-								}
-								session.close();
-								break;
-								
-				case 3:			System.out.println("===============program is terminated===============");
-								System.exit(0);
-								
-					default:	System.out.println("Enter the  correct choice : ");
-								
-				}
+				Items i2 = c2.getitem();
+				System.out.println(i2.getI_id());
+				System.out.println(i2.getname());
+				System.out.println(i2.getcost());
+				
 			}
-			while(choice!=3);
-			sc.close();
+			ses.close();
 		}
 		catch(Exception e)
 		{
 			System.out.println(e.getMessage());
 		}
+		
 	}
-
+	
 }
