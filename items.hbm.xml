@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+<class name="flipkart.items" table="items">
+<id name="I_id">
+<generator class="assigned">
+<param name="property">carts</param>
+</generator>
+</id>
+<property name="name"></property>
+<property name="cost"></property>
+
+
+</class>
+</hibernate-mapping>
+
